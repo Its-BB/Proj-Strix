@@ -1,4 +1,4 @@
-# PROJECT STRIX - Reviewer Package
+# PROJECT STRIX
 
 Clean, submission-oriented code package for academic review.
 
