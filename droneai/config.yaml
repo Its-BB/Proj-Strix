@@ -1,0 +1,71 @@
+detection:
+  # General detection settings
+  confidence_threshold: 0.5
+  nms_threshold: 0.4
+  input_size: 640
+  
+  # Camera settings (local)
+  camera_index: 0
+  frame_width: 1280
+  frame_height: 720
+  fps: 30
+  
+  # Remote stream settings (ESP32-CAM)
+  use_remote_stream: true
+  remote_stream_url: "http://192.168.1.40:80/stream"
+  remote_reconnect_attempts: 5
+  
+  # Model settings
+  human_model: "yolov8n.pt"
+  object_model: "yolov8n.pt"
+  weapon_model: "yolov8n.pt"
+  
+alerts:
+  # Alert settings
+  enable_audio: true
+  enable_visual: true
+  alert_duration: 3.0
+  
+  # Dangerous objects to detect
+  dangerous_objects:
+    - "knife"
+    - "gun"
+    - "rifle"
+    - "pistol"
+    - "weapon"
+    - "blade"
+    - "sword"
+    - "firearm"
+    - "handgun"
+    - "potential_firearm"
+    - "suspicious_remote"
+    - "suspicious_cell phone"
+    - "potential_blade"
+    - "suspicious_drill"
+    - "suspicious_spray bottle"
+    - "suspicious_hair dryer"
+    - "suspicious_flashlight"
+    - "scissors"
+    
+logging:
+  level: "INFO"
+  save_detections: true
+  output_dir: "detections"
+
+
+llm:
+  enabled: false                   # Disable local LLM analysis temporarily to test weapon detection
+  ollama_url: "http://localhost:11434" 
+  model: "llama2:7b"         # Use llama2:7b
+  analysis_interval: 5.0           # Seconds between analyses (increased for less frequent calls)
+  temperature: 0.1                 # Very low temperature for fast, consistent responses
+  max_tokens: 100                  # Reduced max tokens for faster generation
+  timeout: 30.0                    # 30 second timeout for Ollama requests
+  
+display:
+  window_title: "AI Security Detection System"
+  show_confidence: true
+  show_fps: true
+  show_llm_analysis: true          # Show LLM analysis on screen
+  bbox_thickness: 2
+  font_scale: 0.6

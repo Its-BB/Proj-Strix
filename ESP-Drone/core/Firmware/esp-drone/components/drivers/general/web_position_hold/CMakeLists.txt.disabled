@@ -1,0 +1,15 @@
+idf_component_register(
+    SRCS 
+        "web_position_hold.c"
+        "web_position_hold_api.c"
+        "web_position_hold_integration.c"
+    INCLUDE_DIRS 
+        "include"
+    REQUIRES 
+        esp_http_server
+        json
+        freertos
+        log
+        vl53l0
+        core
+)

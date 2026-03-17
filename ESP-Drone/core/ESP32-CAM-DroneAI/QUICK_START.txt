@@ -1,0 +1,100 @@
+╔════════════════════════════════════════════════════════════════╗
+║         ESP32-CAM WiFi Streaming - QUICK START GUIDE            ║
+╚════════════════════════════════════════════════════════════════╝
+
+📋 WHAT'S NEW:
+  • ESP32-CAM now connects to your WiFi network
+  • Python script to fetch and stream video
+  • Web interface still works at http://192.168.x.x
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 STEP 1: BUILD & FLASH (5 minutes)
+
+  1. Open ESP-IDF Command Prompt
+  2. Navigate to project folder
+  3. Run: idf.py build
+  4. Connect ESP32-CAM via USB
+  5. Run: idf.py -p COM3 flash monitor
+     (Replace COM3 with your serial port)
+  6. WAIT for logs to show:
+     ✅ ESP32-CAM Drone Ready!
+     🌐 IP Address: 192.168.x.x
+  7. COPY the IP address
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🐍 STEP 2: SETUP PYTHON (2 minutes)
+
+  1. Open Command Prompt
+  2. Run: pip install -r requirements.txt
+     (Or: pip install opencv-python requests numpy)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📹 STEP 3: STREAM VIDEO (1 minute)
+
+  Replace 192.168.x.x with the IP from Step 1
+
+  ✓ Display live video:
+    python fetch_video.py 192.168.x.x
+
+  ✓ Save to file:
+    python fetch_video.py 192.168.x.x --output video.mp4
+
+  ✓ Test connection:
+    python fetch_video.py 192.168.x.x --test
+
+  ✓ Capture 300 frames:
+    python fetch_video.py 192.168.x.x --frames 300
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⌨️  CONTROLS:
+
+  While streaming:
+    • Press 'q' to quit
+    • Ctrl+C to force stop
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ TROUBLESHOOTING:
+
+  "Connection refused"
+    → Check ESP32-CAM is powered on
+    → Verify IP address is correct
+    → Ensure both on same WiFi network
+
+  "No module named 'cv2'"
+    → Run: pip install opencv-python
+
+  "ESP32 won't connect to WiFi"
+    → Check SSID: GNXS-5G-854460
+    → Check password: 9496795613
+    → Ensure 2.4GHz band available
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTATION:
+
+  • SETUP_GUIDE.md  - Complete setup instructions
+  • CHANGES.md      - What was changed
+  • fetch_video.py  - Python script (run with --help)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌐 WEB INTERFACE:
+
+  Still works! Open in browser:
+    http://192.168.x.x
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WiFi Details:
+  • SSID: GNXS-5G-854460
+  • Password: 9496795613
+  • Mode: Station (connects to your network)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ready? Let's go! 🚀
