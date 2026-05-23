@@ -19,6 +19,8 @@ import numpy as np
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPERIMENTS = Path(__file__).resolve().parent
+sys.path.insert(0, str(EXPERIMENTS))
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
@@ -192,14 +194,18 @@ def plot_all_figures(ablation_rows: list, yolo_test: Optional[dict]) -> None:
         fig.savefig(dest, dpi=150)
     plt.close(fig)
 
-    fig2, ax2 = plt.subplots(figsize=(7, 5))
-    ax2.scatter(rec, prec, s=120, c=lat, cmap="viridis")
-    for i, n in enumerate(names):
-        ax2.annotate(n.replace("_", " "), (rec[i], prec[i]), fontsize=7, xytext=(4, 4), textcoords="offset points")
-    ax2.set_xlabel("Recall (full test, IoU=0.5)")
-    ax2.set_ylabel("Precision")
-    ax2.set_title("Precision--recall trade-off (385 images)")
-    ax2.grid(True, alpha=0.3)
+    from plot_utils import plot_pr_ablation
+
+    fig2, ax2 = plt.subplots(figsize=(7.2, 5.2))
+    plot_pr_ablation(
+        ax2,
+        names,
+        rec,
+        prec,
+        lat,
+        title="Precision--recall trade-off (385 images)",
+        xlabel="Recall (full test, IoU=0.5)",
+    )
     fig2.tight_layout()
     for dest in (FIGURES_DIR / "full_ablation_pr_scatter.png", PAPER_FIG / "ablation_pr_scatter.png"):
         fig2.savefig(dest, dpi=150)

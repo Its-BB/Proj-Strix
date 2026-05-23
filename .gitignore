@@ -48,7 +48,6 @@ droneai/models/
 droneai/detections/
 droneai/experiments/results/
 droneai/experiments/update_paper*.py
-droneai/experiments/generate_paper_figures.py
 
 ESP-Drone/**/build/
 ESP-Drone/**/.ninja_log
