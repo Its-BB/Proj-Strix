@@ -1,31 +1,37 @@
-# droneai - AI Runtime Stack
+# droneai — AI runtime
 
-Python-side pipeline for video ingestion, detection, contextual analysis, and alert generation.
+Python pipeline for video ingest, multi-branch weapon detection, alerts, and optional local LLM scene analysis.
 
-## Start Here
+## Entry points
 
-- `app.py` (primary runtime entry)
-- `detection_system.py` (modular runtime variant)
-- `config.yaml` (runtime configuration)
+- `app.py` — primary runtime
+- `detection_system.py` — modular runtime variant
+- `config.yaml` — runtime configuration
 
-## Module Guide
+## Core modules
 
-| File | Role |
+| Module | Role |
 | --- | --- |
-| `weapon_detector.py` | Multi-strategy weapon/object detection logic |
-| `alert_system.py` | Threat scoring, warning generation, alert formatting |
-| `local_llm_analyzer.py` | Optional local LLM scene interpretation via Ollama |
-| `scene_analyzer.py` | Scene-level helper analysis |
-| `fetch_video.py` | Stream acquisition utility |
+| `weapon_detector.py` | Multi-strategy detection and fusion |
+| `alert_system.py` | Threat scoring and alert output |
+| `local_llm_analyzer.py` | Optional Ollama-based summaries |
+| `scene_analyzer.py` | Scene-level helpers |
+| `fetch_video.py` | Stream acquisition |
 
-## Training and Metrics (Retained)
+## Training
 
-- `weapon_training/train_weapon_model.py` - training script
-- `weapon_training/results/weapon_detection2/results.csv` - epoch-level metrics used in paper tables
-- `weapon_training/results/weapon_detection2/args.yaml` - saved run configuration
-- `weapon_training/dataset_summary.md` - class and split summary for cleaned package
+- `weapon_training/train_weapon_model.py`
+- `weapon_training/dataset_summary.md` — class and split summary
+- Run training locally; metrics are written under `weapon_training/results/` (not versioned)
 
-## Package Policy
+## Evaluation
 
-- Bulky artifacts (weights, caches, raw dataset dumps, runtime temp outputs) are excluded
-- This folder represents a reproducible research prototype snapshot, not a production service
+See `experiments/README.md` for ablation, latency, and robustness benchmarks.
+
+## Local setup
+
+```bash
+pip install -r requirements.txt
+```
+
+Copy `weapon_detection_custom.pt` into this folder for detection and eval runs (not stored in the repository).

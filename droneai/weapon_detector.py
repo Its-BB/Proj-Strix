@@ -2,15 +2,28 @@ import cv2
 import numpy as np
 import logging
 import os
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 from ultralytics import YOLO
 import torch
 
 class WeaponDetector:
     """Enhanced weapon detection system using multiple detection strategies."""
     
-    def __init__(self, config: dict):
+    def __init__(self, config: dict, strategy_overrides: Optional[dict] = None):
         self.config = config
+        default_strategies = {
+            'single_pass_only': False,
+            'multi_angle': True,
+            'region_focus': True,
+            'multi_scale': True,
+            'shape': True,
+            'gun_pattern': True,
+            'context': True,
+            'edge_enhanced': True,
+        }
+        if strategy_overrides:
+            default_strategies.update(strategy_overrides)
+        self.strategies = default_strategies
         self.weapon_classes = [
             'knife', 'pistol', 'rifle', 'gun', 'handgun', 'firearm',
             'blade', 'sword', 'dagger', 'machete', 'axe', 'hammer',
@@ -74,45 +87,41 @@ class WeaponDetector:
             raise
     
     def detect_weapons(self, frame: np.ndarray) -> List[Dict]:
-        """Detect weapons using multiple detection strategies with enhanced angle robustness."""
+        """Detect weapons using enabled strategies (configurable for ablation studies)."""
+        if self.strategies.get('single_pass_only'):
+            detections = self._detect_with_model(frame, self.primary_model, 'single_pass')
+            return self._filter_detections(detections)
+
         all_detections = []
-        
-        # Strategy 1: Multi-angle detection using frame transformations
-        angle_detections = self._detect_multi_angle(frame)
-        all_detections.extend(angle_detections)
-        
-        # Strategy 2: Enhanced detection on cropped regions with people
-        person_regions = self._get_person_regions(frame)
-        for region in person_regions:
-            region_detections = self._detect_in_region(frame, region)
-            all_detections.extend(region_detections)
-        
-        # Strategy 3: Multi-scale detection
-        scale_detections = self._detect_multi_scale(frame)
-        all_detections.extend(scale_detections)
-        
-        # Strategy 4: Shape-based detection for knife-like objects (disabled to reduce false positives)
-        if self.shape_detection_enabled:
-            shape_detections = self._detect_by_shape(frame)
-            all_detections.extend(shape_detections)
-        
-        # Strategy 5: Gun-specific detection patterns (reduced sensitivity)
-        if self.gun_detection_enabled and len(person_regions) > 0:  # Only check for guns near people
-            gun_detections = self._detect_gun_patterns(frame)
-            all_detections.extend(gun_detections)
-        
-        # Strategy 6: Context-based suspicious object detection
-        context_detections = self._detect_suspicious_objects(frame)
-        all_detections.extend(context_detections)
-        
-        # Strategy 7: Enhanced edge detection specifically for pistols and knives
-        edge_detections = self._detect_weapons_edge_enhanced(frame)
-        all_detections.extend(edge_detections)
-        
-        # Remove duplicates and filter
-        filtered_detections = self._filter_detections(all_detections)
-        
-        return filtered_detections
+        person_regions = []
+
+        if self.strategies.get('multi_angle', True):
+            all_detections.extend(self._detect_multi_angle(frame))
+
+        if self.strategies.get('region_focus', True):
+            person_regions = self._get_person_regions(frame)
+            for region in person_regions:
+                all_detections.extend(self._detect_in_region(frame, region))
+
+        if self.strategies.get('multi_scale', True):
+            all_detections.extend(self._detect_multi_scale(frame))
+
+        if self.strategies.get('shape', True) and self.shape_detection_enabled:
+            all_detections.extend(self._detect_by_shape(frame))
+
+        if self.strategies.get('gun_pattern', True) and self.gun_detection_enabled:
+            if not person_regions:
+                person_regions = self._get_person_regions(frame)
+            if len(person_regions) > 0:
+                all_detections.extend(self._detect_gun_patterns(frame))
+
+        if self.strategies.get('context', True):
+            all_detections.extend(self._detect_suspicious_objects(frame))
+
+        if self.strategies.get('edge_enhanced', True):
+            all_detections.extend(self._detect_weapons_edge_enhanced(frame))
+
+        return self._filter_detections(all_detections)
     
     def _detect_with_model(self, frame: np.ndarray, model: YOLO, model_name: str) -> List[Dict]:
         """Detect objects using YOLO model."""
